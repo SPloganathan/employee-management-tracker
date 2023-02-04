@@ -1,23 +1,30 @@
+// importing inquirer
 const inquirer = require("inquirer");
+const Department = require("../lib/Department");
+const Employee = require("../lib/Employee");
 
-const viewAllEmployees = () => {
-  //select query goes here
-  console.log("employess");
+// logic for viewing all employees
+const viewAllEmployees = async () => {
+  const employee = new Employee();
+  await employee.getAllEmployees();
   initializer();
 };
 
+// logic for viewing all roles
 const viewAllRoles = () => {
   //select query goes here
   console.log("roles");
   initializer();
 };
 
-const viewAllDepartments = () => {
-  // select query goes here
-  console.log("departments");
+// logic for viewing all departments
+const viewAllDepartments = async () => {
+  const department = new Department();
+  await department.getAllDepartment();
   initializer();
 };
 
+// logic for adding roles
 const addRole = () => {
   inquirer
     .prompt([
@@ -45,6 +52,7 @@ const addRole = () => {
     });
 };
 
+// logic for adding departments
 const addDepartment = () => {
   inquirer
     .prompt([
@@ -54,13 +62,14 @@ const addDepartment = () => {
         name: "departmentName",
       },
     ])
-    .then((response) => {
-      // insert query goes here
-      console.log("New department added successfully");
+    .then(async (response) => {
+      const department = new Department(response.departmentName);
+      await department.setDepartment();
       initializer();
     });
 };
 
+// logic for adding employees
 const addEmployee = () => {
   inquirer
     .prompt([
@@ -107,12 +116,15 @@ const addEmployee = () => {
       },
     ])
     .then((response) => {
+      //     const employee = new Employee(response.firstName, response.lastName);
+      // await employee.setEmployee();
       // insert query goes here
       console.log("New employee added successfully");
       initializer();
     });
 };
 
+// logic for updating employee role
 const updateEmployeeRole = () => {
   inquirer
     .prompt([
@@ -155,6 +167,8 @@ const updateEmployeeRole = () => {
     });
 };
 
+// writing a function called initializer() which will display the initial list using inquirer.prompt.
+// .then is done using a switch case and each case performs a specific logic.
 const initializer = () => {
   inquirer
     .prompt([
