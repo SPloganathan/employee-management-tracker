@@ -1,0 +1,28 @@
+{
+  "name": "employee-management-tracker",
+  "version": "1.0.0",
+  "description": "A command line application developed to easily view and interact with information stored in databases",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SPloganathan/employee-management-tracker.git"
+  },
+  "keywords": [
+    "employee",
+    "management",
+    "tracker"
+  ],
+  "author": "SAKTHIPRIYA LOGANATHAN",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SPloganathan/employee-management-tracker/issues"
+  },
+  "homepage": "https://github.com/SPloganathan/employee-management-tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.1.0"
+  }
+}
