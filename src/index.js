@@ -81,58 +81,57 @@ const addDepartment = () => {
 };
 
 // logic for adding employees
-const addEmployee = () => {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is the employee's first name?",
-        name: "employeeFirstName",
-      },
-      {
-        type: "input",
-        message: "What is the employee's last name?",
-        name: "employeeLastName",
-      },
-      {
-        type: "list",
-        choices: [
-          "Sales Lead",
-          "Sales Person",
-          "Lead Engineer",
-          "Software Engineer",
-          "Account Manager",
-          "Accountant",
-          "Legal Team Lead",
-          "Lawyer",
-          "Customer Service",
-        ],
-        message: "What is the employee's role?",
-        name: "employeeRole",
-      },
-      {
-        type: "list",
-        choices: [
-          "John Doe",
-          "Mike Chan",
-          "Ashley Rodriguez",
-          "Kevin Tupik",
-          "Kunal Singh",
-          "Malia Brown",
-          "Sarah Lourd",
-          "Tom Allen",
-        ],
-        message: "Who is the employee's manager?",
-        name: "employeeManager",
-      },
-    ])
-    .then((response) => {
-      //     const employee = new Employee(response.firstName, response.lastName);
-      // await employee.setEmployee();
-      // insert query goes here
-      console.log("New employee added successfully");
-      initializer();
+const addEmployee = async () => {
+  const role = new Role();
+  const roleData = await role.getAllRoles();
+  const roleChoices = roleData.map((role) => {
+    return { value: role.id, name: role.title };
+  });
+  const employee = new Employee();
+  const employeeData = await employee.getAllEmployees();
+  const employeeNameChoices = employeeData.map((employee) => {
+    return {
+      value: employee.id,
+      name: `${employee.first_name} ${employee.last_name}`,
+    };
+  });
+  const choices = [
+    {
+      type: "input",
+      message: "What is the employee's first name?",
+      name: "employeeFirstName",
+    },
+    {
+      type: "input",
+      message: "What is the employee's last name?",
+      name: "employeeLastName",
+    },
+    {
+      type: "list",
+      choices: roleChoices,
+      message: "What is the employee's role?",
+      name: "employeeRole",
+    },
+  ];
+  if (employeeNameChoices.length > 0) {
+    choices.push({
+      type: "list",
+      choices: employeeNameChoices,
+      message: "Who is the employee's manager?",
+      name: "employeeManager",
     });
+  }
+  inquirer.prompt(choices).then(async (response) => {
+    const employee = new Employee(
+      response.employeeFirstName,
+      response.employeeLastName,
+      response.employeeRole,
+      response.employeeManager
+    );
+    await employee.setEmployee();
+    console.log("New employee added successfully");
+    initializer();
+  });
 };
 
 // logic for updating employee role
