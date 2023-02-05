@@ -2,30 +2,36 @@
 const inquirer = require("inquirer");
 const Department = require("../lib/Department");
 const Employee = require("../lib/Employee");
+const Role = require("../lib/Role");
 
 // logic for viewing all employees
 const viewAllEmployees = async () => {
   const employee = new Employee();
-  await employee.getAllEmployees();
+  console.log(await employee.getAllEmployees());
   initializer();
 };
 
 // logic for viewing all roles
-const viewAllRoles = () => {
-  //select query goes here
-  console.log("roles");
+const viewAllRoles = async () => {
+  const role = new Role();
+  console.log(await role.getAllRoles());
   initializer();
 };
 
 // logic for viewing all departments
 const viewAllDepartments = async () => {
   const department = new Department();
-  await department.getAllDepartment();
+  console.log(await department.getAllDepartment());
   initializer();
 };
 
 // logic for adding roles
-const addRole = () => {
+const addRole = async () => {
+  const department = new Department();
+  const departmentArray = await department.getAllDepartment();
+  const allDepartments = departmentArray.map((department) => {
+    return { value: department.id, name: department.name };
+  });
   inquirer
     .prompt([
       {
@@ -40,13 +46,18 @@ const addRole = () => {
       },
       {
         type: "list",
-        choices: ["Engineering", "Finance", "Legal", "Sales", "Service"],
+        choices: allDepartments,
         message: "Which department does the role belong to?",
         name: "rolesDepartment",
       },
     ])
     .then((response) => {
-      // insert query goes here
+      const role = new Role(
+        response.roleName,
+        response.roleSalary,
+        response.rolesDepartment
+      );
+      role.setRole();
       console.log("New role added successfully");
       initializer();
     });
@@ -217,6 +228,8 @@ const initializer = () => {
           updateEmployeeRole();
           break;
         case "Quit":
+          break;
+        default:
           break;
       }
     });
