@@ -1,4 +1,4 @@
-// importing inquirer
+// importing all required files
 const inquirer = require("inquirer");
 const Department = require("../lib/Department");
 const Employee = require("../lib/Employee");
@@ -6,21 +6,27 @@ const Role = require("../lib/Role");
 
 // logic for viewing all employees
 const viewAllEmployees = async () => {
+  // initializing the Employee class
   const employee = new Employee();
+  // initializing the function getAllEmployee() from the class file Employee
   console.log(await employee.getAllEmployees());
   initializer();
 };
 
 // logic for viewing all roles
 const viewAllRoles = async () => {
+  // initializing the Role class
   const role = new Role();
+  // initializing the function getAllRoles() from the class file Role
   console.log(await role.getAllRoles());
   initializer();
 };
 
 // logic for viewing all departments
 const viewAllDepartments = async () => {
+  // initializing the Department class
   const department = new Department();
+  // initializing the function getAllDepartment() from the class file Department
   console.log(await department.getAllDepartment());
   initializer();
 };
@@ -29,6 +35,8 @@ const viewAllDepartments = async () => {
 const addRole = async () => {
   const department = new Department();
   const departmentArray = await department.getAllDepartment();
+  // Mapping the data.Inquirer's choices key represents a choice and has a name: key to be shown to the user as an option for the choice, and a value: key which will be what inquirer stores as the answer value in the answer object.
+  // Assinging the department.id to Value since the department value has to be stored as an ID in the Role table.
   const allDepartments = departmentArray.map((department) => {
     return { value: department.id, name: department.name };
   });
@@ -52,11 +60,13 @@ const addRole = async () => {
       },
     ])
     .then((response) => {
+      // pasing the values into the constructor function
       const role = new Role(
         response.roleName,
         response.roleSalary,
         response.rolesDepartment
       );
+      // initializing the function setRole() from the class file Role
       role.setRole();
       console.log("New role added successfully");
       initializer();
@@ -75,6 +85,7 @@ const addDepartment = () => {
     ])
     .then(async (response) => {
       const department = new Department(response.departmentName);
+      // initializing the function setDepartment() from the class file Department
       await department.setDepartment();
       initializer();
     });
@@ -95,83 +106,91 @@ const addEmployee = async () => {
       name: `${employee.first_name} ${employee.last_name}`,
     };
   });
-  const choices = [
-    {
-      type: "input",
-      message: "What is the employee's first name?",
-      name: "employeeFirstName",
-    },
-    {
-      type: "input",
-      message: "What is the employee's last name?",
-      name: "employeeLastName",
-    },
-    {
-      type: "list",
-      choices: roleChoices,
-      message: "What is the employee's role?",
-      name: "employeeRole",
-    },
-  ];
-  if (employeeNameChoices.length > 0) {
-    choices.push({
-      type: "list",
-      choices: employeeNameChoices,
-      message: "Who is the employee's manager?",
-      name: "employeeManager",
+  // pushing none at index 0 since None needs to be shown at top.
+  // Splice will mutate the existing array,
+  // where 0 - Index in which the new element to be pushed,
+  // 0 - Will not delete any element,
+  // { value: null, name: "None" } - will be pushed into 0th index
+  employeeNameChoices.splice(0, 0, { value: null, name: "None" });
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the employee's first name?",
+        name: "employeeFirstName",
+      },
+      {
+        type: "input",
+        message: "What is the employee's last name?",
+        name: "employeeLastName",
+      },
+      {
+        type: "list",
+        choices: roleChoices,
+        message: "What is the employee's role?",
+        name: "employeeRole",
+      },
+      {
+        type: "list",
+        choices: employeeNameChoices,
+        message: "Who is the employee's manager?",
+        name: "employeeManager",
+      },
+    ])
+    .then(async (response) => {
+      const employee = new Employee(
+        response.employeeFirstName,
+        response.employeeLastName,
+        response.employeeRole,
+        response.employeeManager
+      );
+      // initializing the function setEmployee() from the class file Employee
+      await employee.setEmployee();
+      console.log("New employee added successfully");
+      initializer();
     });
-  }
-  inquirer.prompt(choices).then(async (response) => {
-    const employee = new Employee(
-      response.employeeFirstName,
-      response.employeeLastName,
-      response.employeeRole,
-      response.employeeManager
-    );
-    await employee.setEmployee();
-    console.log("New employee added successfully");
-    initializer();
-  });
 };
 
 // logic for updating employee role
-const updateEmployeeRole = () => {
+const updateEmployeeRole = async () => {
+  const employee = new Employee();
+  const employeeData = await employee.getAllEmployees();
+  const employeeNameChoices = employeeData.map((employee) => {
+    return {
+      value: employee.id,
+      name: `${employee.first_name} ${employee.last_name}`,
+    };
+  });
+  const role = new Role();
+  const roleData = await role.getAllRoles();
+  const roleChoices = roleData.map((role) => {
+    return { value: role.id, name: role.title };
+  });
   inquirer
     .prompt([
       {
         type: "list",
-        choices: [
-          "John Doe",
-          "Mike Chan",
-          "Ashley Rodriguez",
-          "Kevin Tupik",
-          "Kunal Singh",
-          "Malia Brown",
-          "Sarah Lourd",
-          "Tom Allen",
-        ],
+        choices: employeeNameChoices,
         message: "Which employee's role do you want to update?",
         name: "employeeRoleUpdate",
       },
       {
         type: "list",
-        choices: [
-          "Sales Lead",
-          "Sales Person",
-          "Lead Engineer",
-          "Software Engineer",
-          "Account Manager",
-          "Accountant",
-          "Legal Team Lead",
-          "Lawyer",
-          "Customer Service",
-        ],
+        choices: roleChoices,
         message: "Which role do you want to assign the selected employee?",
         name: "updateRole",
       },
     ])
     .then((response) => {
-      // update query goes here
+      const employee = new Employee(
+        "",
+        "",
+        response.updateRole,
+        null,
+        response.employeeRoleUpdate
+      );
+      // initializing the function updateEmployeeRole() from the class file Employee
+      employee.updateEmployeeRole();
       console.log("Employee role updated successfully");
       initializer();
     });
@@ -202,6 +221,7 @@ const initializer = () => {
         name: "taskPerformer",
       },
     ])
+    // using switch case logic for displaying the options
     .then((response) => {
       const responseType = response.taskPerformer;
       switch (responseType) {
