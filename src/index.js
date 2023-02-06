@@ -1,15 +1,18 @@
 // importing all required files
+const cTable = require("console.table");
+const logo = require("asciiart-logo");
 const inquirer = require("inquirer");
 const Department = require("../lib/Department");
 const Employee = require("../lib/Employee");
 const Role = require("../lib/Role");
+const db = require("../utils/database");
 
 // logic for viewing all employees
 const viewAllEmployees = async () => {
   // initializing the Employee class
   const employee = new Employee();
   // initializing the function getAllEmployee() from the class file Employee
-  console.log(await employee.getAllEmployees());
+  console.table(await employee.getAllEmployees());
   initializer();
 };
 
@@ -18,7 +21,7 @@ const viewAllRoles = async () => {
   // initializing the Role class
   const role = new Role();
   // initializing the function getAllRoles() from the class file Role
-  console.log(await role.getAllRoles());
+  console.table(await role.getAllRoles());
   initializer();
 };
 
@@ -27,7 +30,7 @@ const viewAllDepartments = async () => {
   // initializing the Department class
   const department = new Department();
   // initializing the function getAllDepartment() from the class file Department
-  console.log(await department.getAllDepartment());
+  console.table(await department.getAllDepartment());
   initializer();
 };
 
@@ -87,6 +90,7 @@ const addDepartment = () => {
       const department = new Department(response.departmentName);
       // initializing the function setDepartment() from the class file Department
       await department.setDepartment();
+      console.log("Deparment added");
       initializer();
     });
 };
@@ -247,6 +251,7 @@ const initializer = () => {
           updateEmployeeRole();
           break;
         case "Quit":
+          db.end();
           break;
         default:
           break;
@@ -254,4 +259,21 @@ const initializer = () => {
     });
 };
 
+// ASCII-ART Logo
+console.log(
+  logo({
+    name: "EMPLOYEE MANAGEMENT TRACKER",
+    font: "Standard",
+    lineChars: 10,
+    padding: 2,
+    margin: 3,
+    borderColor: "grey",
+    logoColor: "white",
+    textColor: "white",
+  })
+    .emptyLine()
+    .render()
+);
+
+// initializing the inquirer questions.
 initializer();

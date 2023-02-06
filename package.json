@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/SPloganathan/employee-management-tracker#readme",
   "dependencies": {
+    "asciiart-logo": "^0.2.7",
+    "console.table": "^0.10.0",
     "inquirer": "^8.2.4",
     "mysql2": "^3.1.0"
   }
