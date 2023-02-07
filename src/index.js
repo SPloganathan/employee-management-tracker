@@ -241,6 +241,15 @@ const updateEmployeeManager = async () => {
     });
 };
 
+// logic for viewing budget uitilized by departments
+const viewBudgetUtilized = async () => {
+  // initializing the Employee class
+  const employee = new Employee();
+  // initializing the function getAllEmployee() from the class file Employee
+  console.table(await employee.getBudgetUtilized());
+  initializer();
+};
+
 // writing a function called initializer() which will display the initial list using inquirer.prompt.
 // .then is done using a switch case and each case performs a specific logic.
 const initializer = () => {
@@ -261,6 +270,7 @@ const initializer = () => {
           "View All Departments",
           "Add Department",
           "Update employee manager",
+          "View budget utilized by each department",
           "Quit",
         ],
         message: "What would you like to do?",
@@ -294,6 +304,9 @@ const initializer = () => {
           break;
         case "Update employee manager":
           updateEmployeeManager();
+          break;
+        case "View budget utilized by each department":
+          viewBudgetUtilized();
           break;
         case "Quit":
           db.end();
