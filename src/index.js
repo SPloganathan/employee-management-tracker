@@ -200,6 +200,47 @@ const updateEmployeeRole = async () => {
     });
 };
 
+// logic for updating employee manager
+
+const updateEmployeeManager = async () => {
+  const employee = new Employee();
+  const employeeData = await employee.getAllEmployees();
+  const employeeNameChoices = employeeData.map((employee) => {
+    return {
+      value: employee.id,
+      name: `${employee.first_name} ${employee.last_name}`,
+    };
+  });
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        choices: employeeNameChoices,
+        message: "Which employee's manager do you want to update?",
+        name: "employeeManagerUpdate",
+      },
+      {
+        type: "list",
+        choices: employeeNameChoices,
+        message: "Which employee do you want to assign as manager?",
+        name: "assignManager",
+      },
+    ])
+    .then((response) => {
+      const employee = new Employee(
+        "",
+        "",
+        "",
+        response.assignManager,
+        response.employeeManagerUpdate
+      );
+      // initializing the function updateEmployeeRole() from the class file Employee
+      employee.updateEmployeeManager();
+      console.log("Employee manager updated successfully");
+      initializer();
+    });
+};
+
 // writing a function called initializer() which will display the initial list using inquirer.prompt.
 // .then is done using a switch case and each case performs a specific logic.
 const initializer = () => {
@@ -219,6 +260,7 @@ const initializer = () => {
           // no questions for below
           "View All Departments",
           "Add Department",
+          "Update employee manager",
           "Quit",
         ],
         message: "What would you like to do?",
@@ -249,6 +291,9 @@ const initializer = () => {
           break;
         case "Update Employee Role":
           updateEmployeeRole();
+          break;
+        case "Update employee manager":
+          updateEmployeeManager();
           break;
         case "Quit":
           db.end();
