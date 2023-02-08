@@ -1,8 +1,11 @@
+-- Dropping the database if already exists
 DROP DATABASE IF EXISTS employeetracker_db;
 CREATE DATABASE employeetracker_db;
 
+-- selecting the database
 USE employeetracker_db;
 
+-- creating tables
 CREATE TABLE department
 (
     id INT NOT NULL

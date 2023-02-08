@@ -5,7 +5,7 @@ const inquirer = require("inquirer");
 const Department = require("../lib/Department");
 const Employee = require("../lib/Employee");
 const Role = require("../lib/Role");
-const db = require("../utils/database");
+const db = require("../config/connection");
 
 // logic for viewing all employees
 const viewAllEmployees = async () => {

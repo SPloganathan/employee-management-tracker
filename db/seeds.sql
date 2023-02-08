@@ -1,3 +1,4 @@
+-- seeding all values
 INSERT INTO department
     (name)
 VALUES

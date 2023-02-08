@@ -1,5 +1,7 @@
+// importing package
 const mysql = require("mysql2");
 
+// establishing mysql connection
 const db = mysql.createConnection(
   {
     host: "localhost",
