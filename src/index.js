@@ -11,7 +11,7 @@ const db = require("../utils/database");
 const viewAllEmployees = async () => {
   // initializing the Employee class
   const employee = new Employee();
-  // initializing the function getAllEmployee() from the class file Employee
+  // calling the fuction getAllEmployee() from the class file Employee
   console.table(await employee.getAllEmployees());
   initializer();
 };
@@ -20,7 +20,7 @@ const viewAllEmployees = async () => {
 const viewAllRoles = async () => {
   // initializing the Role class
   const role = new Role();
-  // initializing the function getAllRoles() from the class file Role
+  // calling the fuction getAllRoles() from the class file Role
   console.table(await role.getAllRoles());
   initializer();
 };
@@ -29,7 +29,7 @@ const viewAllRoles = async () => {
 const viewAllDepartments = async () => {
   // initializing the Department class
   const department = new Department();
-  // initializing the function getAllDepartment() from the class file Department
+  // calling the fuction getAllDepartment() from the class file Department
   console.table(await department.getAllDepartment());
   initializer();
 };
@@ -69,7 +69,7 @@ const addRole = async () => {
         response.roleSalary,
         response.rolesDepartment
       );
-      // initializing the function setRole() from the class file Role
+      // calling the fuction setRole() from the class file Role
       role.setRole();
       console.log("New role added successfully");
       initializer();
@@ -88,7 +88,7 @@ const addDepartment = () => {
     ])
     .then(async (response) => {
       const department = new Department(response.departmentName);
-      // initializing the function setDepartment() from the class file Department
+      // calling the fuction setDepartment() from the class file Department
       await department.setDepartment();
       console.log("Deparment added");
       initializer();
@@ -148,7 +148,7 @@ const addEmployee = async () => {
         response.employeeRole,
         response.employeeManager
       );
-      // initializing the function setEmployee() from the class file Employee
+      // calling the fuction setEmployee() from the class file Employee
       await employee.setEmployee();
       console.log("New employee added successfully");
       initializer();
@@ -193,7 +193,7 @@ const updateEmployeeRole = async () => {
         null,
         response.employeeRoleUpdate
       );
-      // initializing the function updateEmployeeRole() from the class file Employee
+      // calling the function updateEmployeeRole() from the class file Employee
       employee.updateEmployeeRole();
       console.log("Employee role updated successfully");
       initializer();
@@ -201,7 +201,6 @@ const updateEmployeeRole = async () => {
 };
 
 // logic for updating employee manager
-
 const updateEmployeeManager = async () => {
   const employee = new Employee();
   const employeeData = await employee.getAllEmployees();
@@ -234,7 +233,7 @@ const updateEmployeeManager = async () => {
         response.assignManager,
         response.employeeManagerUpdate
       );
-      // initializing the function updateEmployeeRole() from the class file Employee
+      // calling the function updateEmployeeRole() from the class file Employee
       employee.updateEmployeeManager();
       console.log("Employee manager updated successfully");
       initializer();
@@ -245,9 +244,37 @@ const updateEmployeeManager = async () => {
 const viewBudgetUtilized = async () => {
   // initializing the Employee class
   const employee = new Employee();
-  // initializing the function getAllEmployee() from the class file Employee
+  // calling the function getBudgetUtilized() from the class file Employee
   console.table(await employee.getBudgetUtilized());
   initializer();
+};
+
+// logic for view employees by manager
+const viewManagersEmployee = async () => {
+  const employee = new Employee();
+  const managerData = await employee.getAllManagers();
+
+  const managerNameChoices = managerData.map((manager) => {
+    return {
+      value: manager.id,
+      name: manager.name,
+    };
+  });
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        choices: managerNameChoices,
+        message: "Which manager's employee you wanted to view?",
+        name: "managersId",
+      },
+    ])
+    .then(async (response) => {
+      const employee = new Employee("", "", "", response.managersId, null);
+      // calling the function getEmployeeByManager() from the class file Employee
+      console.table(await employee.getEmployeeByManager());
+      initializer();
+    });
 };
 
 // writing a function called initializer() which will display the initial list using inquirer.prompt.
@@ -259,18 +286,16 @@ const initializer = () => {
       {
         type: "list",
         choices: [
-          // no questions for below
           "View All Employees",
           "Add Employee",
           "Update Employee Role",
-          // view all roles- no questions
           "View All Roles",
           "Add Role",
-          // no questions for below
           "View All Departments",
           "Add Department",
           "Update employee manager",
           "View budget utilized by each department",
+          "View employees by manager",
           "Quit",
         ],
         message: "What would you like to do?",
@@ -307,6 +332,9 @@ const initializer = () => {
           break;
         case "View budget utilized by each department":
           viewBudgetUtilized();
+          break;
+        case "View employees by manager":
+          viewManagersEmployee();
           break;
         case "Quit":
           db.end();
